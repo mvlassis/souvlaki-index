@@ -1,0 +1,97 @@
+/* Reset */
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #fafafa;
+}
+
+/* NAVIGATION BAR */
+.navbar {
+  background: #ffffff;
+  padding: 12px 20px;
+
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+
+  border-bottom: 1px solid #ddd;
+}
+
+
+/* Nav links */
+.navbar a,
+.navbar button {
+  margin-right: 20px;
+  font-size: 18px;
+  text-decoration: none;
+  color: #333;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 4px 6px;
+}
+
+.navbar a:hover,
+.navbar button:hover {
+  color: #0077cc;
+}
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Reset list styling */
+.dropdown-menu {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* Dropdown panel */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  top: 100%;      /* directly under the button */
+  left: 0;
+  background: white;
+  border: 1px solid #ddd;
+  min-width: 180px;
+  z-index: 99;
+}
+
+/* Each row */
+.dropdown-menu li {
+  margin: 0;
+  padding: 0;
+}
+
+/* The actual clickable area */
+.dropdown-menu a {
+  display: block;             /* full row */
+  width: 100%;                /* fills the dropdown */
+  box-sizing: border-box;
+  padding: 8px 12px;
+  color: #333;
+  text-decoration: none;
+}
+
+/* Hover highlight covers whole row */
+.dropdown-menu a:hover {
+  background: #efefef;
+}
+
+/* Show menu on hover */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+
+/* PAGE CONTENT AREA */
+.container {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 0 20px;
+}

@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>{{ item_name }}</h1>
+<p>
+  Based on prices from <strong>{{ number_prices }}</strong> entries,
+  the current average price of <strong>{{ item_name }}</strong>
+  is <strong>{{ average_price|eur }}</strong>.
+</p>
+
+<hr>
+
+<h1>{{ item_name }} – Price History</h1>
+<canvas id="chart" class="mb-6"></canvas>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  const history = {{ history_json | safe }};
+  const labels = history.map(row => row.day);
+  const data = history.map(row => row.avg_price_cents / 100);
+
+  new Chart(document.getElementById("chart"), {
+    type: "line",
+    data: {
+      labels: labels,
+      datasets: [{
+        label: "Average Price (€)",
+        data: data,
+        borderWidth: 2,
+        tension: 0.2
+      }]
+    }
+  });
+</script>
+
+{% endblock %}

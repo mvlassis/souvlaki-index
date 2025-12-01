@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1>Souvlaki Index</h1>
+
+
+<h1>Average Latest Prices</h1>
+
+<ul>
+  {% for item in items %}
+    <li>
+      <a href="/item/{{ item.item_name }}">
+        {{ item.item_name }}
+      </a>
+      — €{{ "%.2f"|format(item.avg_price_cents / 100) }}
+    </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

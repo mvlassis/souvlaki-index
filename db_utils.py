@@ -121,3 +121,5 @@ def insert_price(
         """,
         (menu_item_id, page_id, cents, currency, now),
     )
+
+
