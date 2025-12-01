@@ -1,0 +1,22 @@
+[project]
+name = "souvlaki-index"
+version = "0.1.0"
+description = "Scripts for scraping and extracting souvlaki prices."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "beautifulsoup4>=4.14.3",
+    "flask>=3.1.2",
+    "nodriver>=0.48.1",
+    "python-slugify>=8.0.4",
+    "selenium>=4.38.0",
+]
+
+[dependency-groups]
+lint = [
+    "ruff>=0.14.7",
+]
+
+
+[tool.ruff]
+line-length = 120

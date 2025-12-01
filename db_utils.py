@@ -2,6 +2,7 @@ import hashlib
 import sqlite3
 from datetime import datetime, timezone
 from pathlib import Path
+import slugify
 from typing import Optional
 
 DEFAULT_SCHEMA_PATH = Path("db/schema.sql")
@@ -9,6 +10,10 @@ DEFAULT_SCHEMA_PATH = Path("db/schema.sql")
 
 def iso_utc(dt: datetime) -> str:
     return dt.astimezone(timezone.utc).replace(tzinfo=timezone.utc).isoformat()
+
+
+def to_slug(name: str) -> str:
+    return slugify.slugify(name, lowercase=True)
 
 
 def connect(db_path: Path) -> sqlite3.Connection:
@@ -47,9 +52,10 @@ def ensure_menu_item(conn, vendor: str, item_name: str) -> int:
     ).fetchone()
     if row:
         return row[0]
+    item_slug = to_slug(item_name)
     cur = conn.execute(
-        "INSERT INTO menu_items (vendor, item_name) VALUES (?, ?)",
-        (vendor, item_name),
+        "INSERT INTO menu_items (vendor, item_name, item_slug) VALUES (?, ?, ?)",
+        (vendor, item_name, item_slug),
     )
     return cur.lastrowid
 
@@ -109,9 +115,7 @@ def fetch_page_html(conn: sqlite3.Connection, page_id: int) -> bytes:
     return row[0]
 
 
-def insert_price(
-    conn, menu_item_id: int, page_id: int, price_eur: float, currency="EUR"
-):
+def insert_price(conn, menu_item_id: int, page_id: int, price_eur: float, currency="EUR"):
     cents = int(round(price_eur * 100))
     now = iso_utc(datetime.now(timezone.utc))
     conn.execute(
@@ -121,5 +125,3 @@ def insert_price(
         """,
         (menu_item_id, page_id, cents, currency, now),
     )
-
-

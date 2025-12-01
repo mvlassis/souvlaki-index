@@ -1,9 +1,21 @@
-/* Reset */
 body {
   margin: 0;
   font-family: Arial, sans-serif;
   background: #fafafa;
 }
+
+.logo {
+  height: 48px;
+  width: auto;
+  display: block;
+}
+
+.logo-link {
+  /* margin-right: 20px; */
+  display: flex;
+  align-items: center;
+}
+
 
 /* NAVIGATION BAR */
 .navbar {
@@ -17,7 +29,6 @@ body {
 
   border-bottom: 1px solid #ddd;
 }
-
 
 /* Nav links */
 .navbar a,

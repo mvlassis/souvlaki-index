@@ -3,6 +3,7 @@
 <head>
   <meta charset="utf-8">
   <title>{{ title or "Souvlaki Prices" }}</title>
+  <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
   <link rel="stylesheet" href="/static/style.css">
 </head>
 
@@ -11,6 +12,10 @@
   <!-- TOP NAV BAR -->
   <nav class="navbar">
 
+	<a href="/" class="logo-link">
+	  <img src="{{ url_for('static', filename='logo.png') }}" alt="Home" class="logo">
+	</a>
+	
 	<!-- Home -->
     <a href="/">Home</a>
 	
@@ -18,8 +23,8 @@
   <div class="dropdown">
     <button class="nav-link">Prices ▼</button>
     <ul class="dropdown-menu">
-      {% for name in item_names %}
-        <li><a href="/item/{{ name }}">{{ name }}</a></li>
+      {% for item in item_slugs %}
+        <li><a href="{{ url_for('item_page', item_slug=item.item_slug) }}">{{ item.item_name }}</a></li>
       {% endfor %}
     </ul>
   </div>

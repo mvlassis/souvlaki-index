@@ -19,6 +19,7 @@ url = "https://www.e-food.gr/delivery/athina?categories=souvlakia"
 
 DB_PATH = Path("db/data.db")
 
+
 async def main(link_limit: Optional[int] = None):
     conn = db_utils.connect(DB_PATH)
     db_utils.init_db(conn)
@@ -29,7 +30,6 @@ async def main(link_limit: Optional[int] = None):
 
     await asyncio.sleep(10)
 
-    # await page.save_screenshot()
     content = await page.get_content()
     soup = BeautifulSoup(content, "html.parser")
 
@@ -46,9 +46,7 @@ async def main(link_limit: Optional[int] = None):
     logger.info(f"Found {len(delivery_links)} delivery links.")
     logger.info("-" * 80)
 
-    delivery_links_to_scrape = (
-        delivery_links[:link_limit] if link_limit is not None else delivery_links
-    )
+    delivery_links_to_scrape = delivery_links[:link_limit] if link_limit is not None else delivery_links
     if link_limit:
         logger.info(
             f"Because you have specified link_limit = {link_limit}, we will only scrape the first {link_limit} links found."
@@ -78,7 +76,7 @@ async def main(link_limit: Optional[int] = None):
     logger.info("✅ Scrape complete.")
 
 
-async def load_and_return_html(browser, url, delay: int = 10):
+async def load_and_return_html(browser, url, delay: int = 8):
     """
     Loads a page, waits for content, retrieves HTML, and returns it as bytes.
     """

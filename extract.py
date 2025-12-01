@@ -21,9 +21,7 @@ def extract_price_from_html(html_str: str, item_name: str):
     section = soup.find(id="tylihta")
     if not section:
         return None
-    name_pattern = re.compile(
-        rf"{re.escape(item_name).replace(r'\ ', r'\s*')}", re.IGNORECASE
-    )
+    name_pattern = re.compile(rf"{re.escape(item_name).replace(r'\ ', r'\s*')}", re.IGNORECASE)
     name_node = section.find(string=name_pattern)
     price_pattern = re.compile(
         r"""
@@ -55,9 +53,7 @@ def main():
         default="Γύρος χοιρινός",
         help="Name of the menu item to search (default: Γύρος χοιρινός)",
     )
-    parser.add_argument(
-        "--db", type=str, default=os.environ.get("SQLITE_PATH", DEFAULT_DB_PATH)
-    )
+    parser.add_argument("--db", type=str, default=os.environ.get("SQLITE_PATH", DEFAULT_DB_PATH))
     parser.add_argument(
         "--schema-path",
         type=str,
@@ -65,7 +61,7 @@ def main():
         help="Path to the schema file for initializing the database. (default: db/schema.sql)",
     )
     args = parser.parse_args()
-    
+
     item_name = args.item
     conn = db_utils.connect(args.db)
     db_utils.init_db(conn, args.schema_path)
@@ -75,11 +71,17 @@ def main():
         """
         SELECT p.id, p.source_url, p.content_blob
         FROM pages p
-        LEFT JOIN prices r ON r.page_id = p.id
-        WHERE r.id IS NULL
+        LEFT JOIN prices r
+            ON r.page_id = p.id
+        LEFT JOIN menu_items m
+            ON m.id = r.menu_item_id
+            AND m.item_name = :item_name
+        WHERE m.id IS NULL
         ORDER BY p.id;
-        """
+        """,
+        {"item_name": item_name},
     ).fetchall()
+
 
     logger.info(f"Found {len(unprocessed_pages)} unprocessed pages.")
 
@@ -93,8 +95,6 @@ def main():
             logger.debug(f"No price found for '{item_name}' in {source_url}")
             continue
 
-        logger.info(f"Found price {price} for item '{item_name}'")
-
         # Vendor: derive from URL (temporary heuristic)
         vendor = source_url.rsplit("/", 1)[-1] or "unknown"
         vendor = vendor.replace("-", " ").strip()
@@ -103,9 +103,7 @@ def main():
 
         db_utils.insert_price(conn, menu_item_id, page_id, price)
 
-        logger.info(
-            f"Inserted price {price} for item '{item_name}' at vendor '{vendor}'"
-        )
+        logger.info(f"✅ Inserted price {price} for item '{item_name}' at vendor '{vendor}'")
 
     conn.commit()
     conn.close()

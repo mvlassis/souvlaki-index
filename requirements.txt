@@ -1,4 +1,0 @@
-nodriver
-beautifulsoup4
-flask
-selenium

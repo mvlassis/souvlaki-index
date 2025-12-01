@@ -1,11 +1,13 @@
 import sqlite3
 from typing import List
 
+
 def get_average_latest_prices(conn: sqlite3.Connection):
     sql = """
     WITH latest_prices AS (
         SELECT
             m.item_name,
+            m.item_slug,
             p.price_cents,
             p.currency,
             p.observed_at
@@ -19,11 +21,12 @@ def get_average_latest_prices(conn: sqlite3.Connection):
     )
     SELECT
         item_name,
+        item_slug,
         AVG(price_cents) AS avg_price_cents,
         currency,
         MAX(observed_at) AS latest_observed_at
     FROM latest_prices
-    GROUP BY item_name, currency
+    GROUP BY item_name, item_slug, currency
     ORDER BY item_name;
     """
     rows = conn.execute(sql).fetchall()
@@ -61,6 +64,18 @@ def list_item_names(conn: sqlite3.Connection) -> List[str]:
     return [r["item_name"] for r in rows]
 
 
+def list_item_slugs(conn):
+    return conn.execute(
+        "SELECT DISTINCT item_slug, item_name FROM menu_items ORDER BY item_name"
+    ).fetchall()
+
+
+def get_item_by_slug(conn, item_slug):
+    return conn.execute(
+        "SELECT * FROM menu_items WHERE item_slug = ?",
+        (item_slug,)
+    ).fetchone()
+
 def get_item_summary(conn, item_name: str):
     sql = """
     WITH latest_prices AS (
@@ -87,6 +102,5 @@ def get_item_summary(conn, item_name: str):
     row = conn.execute(sql, (item_name,)).fetchone()
     return {
         "count_prices": row["count_prices"],
-        "avg_price_cents": row["avg_price_cents"]
+        "avg_price_cents": row["avg_price_cents"],
     }
-

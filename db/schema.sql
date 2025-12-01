@@ -22,6 +22,7 @@ CREATE TABLE IF NOT EXISTS menu_items (
   id INTEGER PRIMARY KEY,
   vendor TEXT NOT NULL,
   item_name TEXT NOT NULL,
+  item_slug TEXT NOT NULL,
   UNIQUE (vendor, item_name)
 );
 
